@@ -1,0 +1,14 @@
+{
+  "paired_fastq_qc_workflow.pairs": [
+    {
+      "sample_id": "sample1",
+      "r1": "fastq/sample1_R1.fq",
+      "r2": "fastq/sample1_R2.fq"
+    },
+    {
+      "sample_id": "sample2",
+      "r1": "fastq/sample2_R1.fq",
+      "r2": "fastq/sample2_R2.fq"
+    }
+  ]
+}
