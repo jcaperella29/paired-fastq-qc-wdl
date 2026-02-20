@@ -39,12 +39,13 @@ task pair_qc {
     Array[File] fastqc_zips = glob("fastqc_out/*_fastqc.zip")
     Array[File] fastqc_htmls = glob("fastqc_out/*_fastqc.html")
   }
-runtime {
-  cpu: 1
-  memory: "2G"
-  docker: "quay.io/biocontainers/fastqc:0.11.9--0"
+
+  runtime {
+    cpu: 1
+    memory: "2G"
+    docker: "quay.io/biocontainers/fastqc:0.11.9--0"
+  }
 }
- }
 
 task merge_counts {
   input {
@@ -63,11 +64,12 @@ task merge_counts {
   output {
     File merged_qc = "merged_qc.tsv"
   }
-runtime {
-  cpu: 1
-  memory: "1G"
-  docker: "ubuntu:22.04"
-}
+
+  runtime {
+    cpu: 1
+    memory: "1G"
+    docker: "ubuntu:22.04"
+  }
  }
 
 task multiqc_local {
@@ -99,11 +101,12 @@ task multiqc_local {
     File html_report = "multiqc_out/multiqc_report.html"
     Array[File] reports = glob("multiqc_out/*")
   }
-runtime {
-  cpu: 1
-  memory: "2G"
-  docker: "quay.io/biocontainers/multiqc:1.14--pyhdfd78af_0"
-}
+
+  runtime {
+    cpu: 1
+    memory: "2G"
+    docker: "quay.io/biocontainers/multiqc:1.14--pyhdfd78af_0"
+  }
  }
 workflow paired_fastq_qc_workflow {
   input {
@@ -129,8 +132,8 @@ workflow paired_fastq_qc_workflow {
   }
 
   output {
-  File merged_qc = merge_counts.merged_qc
-  File multiqc_html = multiqc_local_call.html_report
-  Array[File] multiqc_reports = multiqc_local_call.reports
-}
+    File merged_qc = merge_counts.merged_qc
+    File multiqc_html = multiqc_local_call.html_report
+    Array[File] multiqc_reports = multiqc_local_call.reports
+  }
 }
