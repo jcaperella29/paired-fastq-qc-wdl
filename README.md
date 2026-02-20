@@ -1,17 +1,21 @@
 # Paired FASTQ QC (WDL + Cromwell)
 
-A small WDL workflow that runs basic QC for paired-end FASTQ files:
+A small, containerized WDL workflow that performs basic quality control for paired-end FASTQ files using Cromwell.
+
+The workflow provides:
 - per-sample read counts (R1/R2)
 - FastQC on R1/R2
 - MultiQC report aggregating FastQC outputs across all samples
 
 ## Requirements
+
 - Java (to run Cromwell)
 - `cromwell.jar`
 - Docker (workflow uses docker images in task runtimes)
 - Input FASTQ files accessible from the machine running Cromwell
 
 ## Run
+
 From the repo directory:
 
 ```bash
