@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+  Author JC
+  Tool cromwell
+  Version 84
+
+%environment
+  export LC_ALL=C
+  export LANG=C
+  export CROMWELL_JAR=/opt/cromwell/cromwell.jar
+  export WOMTOOL_JAR=/opt/cromwell/womtool.jar
+
+%post
+  set -euo pipefail
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    bash \
+    openjdk-17-jre-headless \
+    tini \
+    coreutils \
+    grep \
+    sed \
+    gawk
+  rm -rf /var/lib/apt/lists/*
+
+  mkdir -p /opt/cromwell
+
+  # Cromwell + womtool v84
+  curl -L -o /opt/cromwell/cromwell.jar \
+    https://github.com/broadinstitute/cromwell/releases/download/84/cromwell-84.jar
+
+  curl -L -o /opt/cromwell/womtool.jar \
+    https://github.com/broadinstitute/cromwell/releases/download/84/womtool-84.jar
+
+  # Convenience wrappers
+  cat >/usr/local/bin/cromwell <<'EOF'
+#!/usr/bin/env bash
+%post -c /bin/bash
+set -euo pipefail
+
+exec java ${JAVA_OPTS:-} -jar /opt/cromwell/cromwell.jar "$@"
+EOF
+  chmod +x /usr/local/bin/cromwell
+
+  cat >/usr/local/bin/womtool <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+exec java ${JAVA_OPTS:-} -jar /opt/cromwell/womtool.jar "$@"
+EOF
+  chmod +x /usr/local/bin/womtool
+
+%runscript
+  exec /usr/bin/tini -s -- cromwell "$@"
